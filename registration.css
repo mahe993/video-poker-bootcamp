@@ -1,0 +1,134 @@
+:root {
+  font-size: 10px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+.pages {
+  max-width: 100vw;
+  width: 100%;
+  height: 100%;
+}
+
+.registrationpage {
+  background-color: black;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  color: white;
+  border: 0.2rem solid white;
+  height: 20rem;
+  aspect-ratio: 4/3;
+  border-radius: 5%;
+  z-index: 1;
+}
+
+.stylepoints {
+  position: absolute;
+  display: grid;
+  grid-template: 1fr 2.5fr 1fr / 1fr 2.5fr 1fr;
+  color: white;
+  height: 35rem;
+  aspect-ratio: 4/3;
+}
+
+.foursuits {
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spades {
+  grid-area: 1/1/2/4;
+  color: red;
+  animation: rotatesuits 16s linear infinite;
+}
+
+.diamond {
+  grid-area: 2/3/3/4;
+  color: greenyellow;
+  animation: rotatesuits 16s linear -4s infinite;
+}
+
+.clubs {
+  grid-area: 3/1/4/4;
+  color: skyblue;
+  animation: rotatesuits 16s linear -8s infinite;
+}
+
+.hearts {
+  grid-area: 2/1/3/2;
+  color: yellow;
+  animation: rotatesuits 16s linear -12s infinite;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.playbtn {
+  width: 100%;
+  margin-top: 1rem;
+  background-image: radial-gradient(
+    rgba(255, 0, 0, 0.445),
+    rgba(255, 255, 0, 0.486)
+  );
+}
+
+.playbtn:hover {
+  cursor: pointer;
+}
+
+input {
+  width: 80%;
+  height: 3rem;
+}
+
+label,
+input,
+.playbtn {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+::placeholder {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgba(53, 53, 53, 0.459);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
