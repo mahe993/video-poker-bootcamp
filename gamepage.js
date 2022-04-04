@@ -1,4 +1,4 @@
-/** @function calcHandScore to calculate hand scores */
+/** @function calcHandScore func to calculate hand scores */
 const calcHandScore = () => {
 
 };

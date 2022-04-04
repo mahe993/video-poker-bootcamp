@@ -1,5 +1,5 @@
 .fade {
-  animation: fading 5s linear forwards;
+  animation: fading 3s linear 3s forwards;
 }
 
 @keyframes fading {
@@ -10,6 +10,20 @@
   100% {
     opacity: 0;
     display: none;
+  }
+}
+
+.rotation {
+  animation: rotate 3s ease-in forwards;
+}
+
+@keyframes rotate {
+  0% {
+    transform: none;
+  }
+
+  100% {
+    transform: rotate(1800deg) scale(0);
   }
 }
 
