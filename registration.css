@@ -26,10 +26,10 @@ body {
 .registrationpage {
   background-color: black;
   position: absolute;
-  display: flex;
+  display: NONE;
   justify-content: center;
   align-items: center;
-  visibility: hidden;
+  z-index: 1;
 }
 
 .loginbox {

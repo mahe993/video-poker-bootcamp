@@ -18,6 +18,7 @@ const clickPlay = () => {
   loginBox.classList.add('rotation');
   styleBox.classList.add('rotation');
   registrationPage.classList.add('fade');
+  gameMessage.innerText = `Welcome ${userInfoObject.username}, May the odds be in your favor!`;
   audioWhiteNoise.play();
   audioEntryNoise.play();
 };
