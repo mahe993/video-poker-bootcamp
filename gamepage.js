@@ -74,3 +74,53 @@ createStakesGrid();
 const calcHandScore = () => {
 
 };
+
+/** @function createCard func to create card and append */
+
+/** @function clickCard func for card event listener */
+const clickCard = (event) => {
+  event.currentTarget.classList.add('selected');
+};
+
+/** @function clickBet func for pokerchip event listener */
+const clickBet = () => {
+  betAmount += 1;
+  if (betAmount > 5) {
+    betAmount = 1;
+  }
+  betDisplay.innerText = betAmount;
+};
+
+/** @function clickDeal func for deal button event listener */
+const clickDeal = () => {
+  const removedCardArray = [];
+  /** @method forEach array method to identify which cards selected to remove */
+  allCardDomsArray.forEach(
+    (x) => {
+      if ([...x.classList].includes('selected')) {
+        removedCardArray.push([...x.classList][1]);
+        x.classList.add('removing');
+        setTimeout(() => {
+          x.remove();
+        }, 1000);
+      }
+    },
+  );
+  setTimeout(() => {
+    console.log(removedCardArray);
+    // for (let i = 0; i < removedCardArray.length; i += 1) {
+    //   const card = createCard();
+    //   card.classList.add(removedCardArray[i]);
+    // }
+    allCardDomsArray.forEach(
+      (x) => {
+        x.classList.add('dealing');
+        x.addEventListener('click', clickCard);
+      },
+    );
+  }, 1000);
+};
+
+/** @event listener events */
+dealBtn.addEventListener('click', clickDeal);
+betBtn.addEventListener('click', clickBet);

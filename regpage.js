@@ -19,6 +19,8 @@ const clickPlay = () => {
   styleBox.classList.add('rotation');
   registrationPage.classList.add('fade');
   gameMessage.innerText = `Welcome ${userInfoObject.username}, May the odds be in your favor!`;
+  playerNameDisplay.innerText = inputUsername.value;
+  playerAccountDisplay.innerText = `$${inputBalance.value}`;
   audioWhiteNoise.play();
   audioEntryNoise.play();
 };
