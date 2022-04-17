@@ -10,6 +10,10 @@ const createStakesGrid = () => {
         case 0:
           boxText = 'Bets ($)';
           multiplier = 1;
+          div.classList.add(`column${j}`);
+          if (j === 1) {
+            div.classList.add('selectcolumn');
+          }
           break;
 
         case 1:
@@ -60,6 +64,7 @@ const createStakesGrid = () => {
       let boxNumber = j * multiplier;
       if (j === 0) {
         div.innerText = boxText;
+        div.classList.add(`row${i}`);
       } else {
         div.innerText = boxNumber;
       }
@@ -75,6 +80,8 @@ const calcHandScore = () => {
 
 };
 
+/** @function makeDeck factory function to make a deck of cards */
+
 /** @function createCard func to create card and append */
 
 /** @function clickCard func for card event listener */
@@ -88,6 +95,12 @@ const clickBet = () => {
   if (betAmount > 5) {
     betAmount = 1;
   }
+  if (betAmount === 1) {
+    document.querySelector('.column5').classList.remove('selectcolumn');
+  }
+  document.querySelector(`.column${betAmount - 1}`).classList.remove('selectcolumn');
+  document.querySelector(`.column${betAmount}`).classList.add('selectcolumn');
+
   betDisplay.innerText = betAmount;
 };
 
