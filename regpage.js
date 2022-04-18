@@ -22,7 +22,7 @@ const clickPlay = () => {
   setTimeout(() => {
     registrationPage.style.display = 'none';
   }, 6000);
-  gameMessage.innerText = `Welcome ${userInfoObject.username}, May the odds be in your favor!`;
+  gameMessage.innerText = `Welcome ${userInfoObject.username}, Click the DEAL button to start!`;
   playerNameDisplay.innerText = inputUsername.value;
   playerAccountDisplay.innerText = `$${inputBalance.value}`;
   audioWhiteNoise.play();

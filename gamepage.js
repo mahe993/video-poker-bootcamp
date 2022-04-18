@@ -4,6 +4,7 @@ const createStakesGrid = () => {
   for (let i = 0; i < STAKES_ROWS; i += 1) {
     for (let j = 0; j < STAKES_COLUMNS; j += 1) {
       const div = document.createElement('div');
+      div.classList.add(`box${i}${j}`);
       let multiplier;
       let boxText;
       switch (i) {
@@ -80,16 +81,84 @@ const calcHandScore = () => {
 
 };
 
-/** @function makeDeck factory function to make a deck of cards */
+/** @function cardProto ancenstor prototype obj for makeCardObj. cards will have proto func to create a div element of themselves */
+const cardProto = {
+  createDiv() {
+    const cardDiv = document.createElement('div');
+    cardDiv.classList.add('card', `${this.cardColor}`);
+    const cardBackDiv = document.createElement('img');
+    cardBackDiv.src = './images/cardback.png';
+    cardBackDiv.classList.add('cardback');
+    const cardFrontDiv = document.createElement('div');
+    cardFrontDiv.classList.add('cardfront');
+    cardFrontDiv.innerHTML = `${this.cardName}<br>${this.cardSuit}`;
+    cardDiv.append(cardBackDiv, cardFrontDiv);
+    return cardDiv;
+  },
+};
+console.log(cardProto);
 
-/** @function createCard func to create card and append */
+/** @function makeCardObj factory function to make a card object */
+const makeCardObj = (cardSuit, cardName, cardRank, cardColor) => Object.create(cardProto, {
+  cardSuit: { value: cardSuit },
+  cardName: { value: cardName },
+  cardRank: { value: cardRank },
+  cardColor: { value: cardColor },
+});
 
-/** @function clickCard func for card event listener */
-const clickCard = (event) => {
-  event.currentTarget.classList.add('selected');
+/** @function makeDeck function to make a deck of cards */
+const makeDeck = () => {
+  const deck = [];
+  const SUITS = ['♥', '♦', '♣', '♠'];
+  const COLORS = ['red', 'red', 'black', 'black'];
+  for (let i = 0; i < SUITS.length; i += 1) {
+    for (let j = 1; j < 14; j += 1) {
+      let cardName = j;
+      switch (j) {
+        case 1:
+          cardName = 'A';
+          break;
+
+        case 11:
+          cardName = 'J';
+          break;
+
+        case 12:
+          cardName = 'Q';
+          break;
+
+        case 13:
+          cardName = 'K';
+          break;
+      }
+      deck.push(makeCardObj(SUITS[i], cardName, j, COLORS[i]));
+    }
+  }
+  return deck;
 };
 
-/** @function clickBet func for pokerchip event listener */
+/** @function shuffleDeck function to shuffle a deck of cards */
+function shuffleDeck(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+/** @global init a new shuffled deck of cards */
+let newShuffledDeck = shuffleDeck(makeDeck());
+
+/** @function clickCard func for clicking on cards event listener */
+const clickCard = (event) => {
+  let cardClassesArray = [...event.currentTarget.classList];
+  if (cardClassesArray.includes('selected')) {
+    event.currentTarget.classList.remove('selected');
+  } else {
+    event.currentTarget.classList.add('selected'); }
+};
+
+/** @function clickBet func for clicking on pokerchip event listener */
 const clickBet = () => {
   betAmount += 1;
   if (betAmount > 5) {
@@ -104,36 +173,84 @@ const clickBet = () => {
   betDisplay.innerText = betAmount;
 };
 
-/** @function clickDeal func for deal button event listener */
+/** @function clickDeal func for clicking on deal button event listener */
 const clickDeal = () => {
-  const removedCardArray = [];
-  /** @method forEach array method to identify which cards selected to remove */
-  allCardDomsArray.forEach(
-    (x) => {
-      if ([...x.classList].includes('selected')) {
-        removedCardArray.push([...x.classList][1]);
-        x.classList.add('removing');
-        setTimeout(() => {
-          x.remove();
-        }, 1000);
-      }
-    },
-  );
-  setTimeout(() => {
-    console.log(removedCardArray);
-    // for (let i = 0; i < removedCardArray.length; i += 1) {
-    //   const card = createCard();
-    //   card.classList.add(removedCardArray[i]);
-    // }
+  if (gameState === 0) {
+    /** remove existing cards */
+    const allCardsArray = [...document.querySelectorAll('.card')];
+    allCardsArray.forEach((x) => {
+      x.classList.add('removing');
+      setTimeout(() => x.remove(), 1000); });
+    /** take the bet money */
+    accountBalance -= betAmount;
+    if (accountBalance < 0) {
+      accountBalance += betAmount;
+      alert('You do not have enough funds to make this bet! Please change bet amount to continue playing!');
+      return;
+    }
+    playerAccountDisplay.innerText = accountBalance;
+    /** disable changing of bet amount */
+    betBtn.style.pointerEvents = 'none';
+    /** create new 5 cards */
+    for (let i = 0; i < 5; i += 1) {
+      const card = newShuffledDeck.pop();
+      const cardDisplay = card.createDiv();
+      cardDisplay.classList.add(`card${i}`);
+      cardContainer.append(cardDisplay);
+    }
+    const allCardDomsArray = [...document.querySelectorAll('.card')];
     allCardDomsArray.forEach(
       (x) => {
         x.classList.add('dealing');
         x.addEventListener('click', clickCard);
       },
     );
-  }, 1000);
-};
+    /** enable clicking on cards */
+    cardContainer.style.pointerEvents = 'all';
+    /** change game message */
+    gameMessage.innerText = 'Select cards you wish to change and click DEAL';
+    /** change game state */
+    gameState = 1;
+  } else {
+    /** disable clicking on cards */
+    cardContainer.style.pointerEvents = 'none';
+    /** to record card# that has been removed so to facilitate replacing later on */
+    const removedCardArray = [];
+    /** @method forEach array method to identify which cards are selected to remove */
+    const allCardDomsArray = [...document.querySelectorAll('.card')];
+    allCardDomsArray.forEach(
+      (x) => {
+        if ([...x.classList].includes('selected')) {
+          removedCardArray.push([...x.classList][2]);
+          x.classList.add('removing');
+          setTimeout(() => {
+            x.remove();
+          }, 1000);
+        }
+      },
+    );
+    setTimeout(() => {
+      console.log(removedCardArray);
+      /** create a new card for every removed card using loop or forEach */
+      for (let i = 0; i < removedCardArray.length; i += 1) {
+        const card = newShuffledDeck.pop();
+        const cardDisplay = card.createDiv();
+        cardDisplay.classList.add(removedCardArray[i]);
+        cardContainer.append(cardDisplay);
+        cardDisplay.classList.add('dealing');
+        cardDisplay.addEventListener('click', clickCard);
+      }
+      /** Check win status and award bets */
 
+      /** change game message */
+      gameMessage.innerText = 'Sorry you lost! adjust bet size and deal again!';
+      /** reset game state */
+      gameState = 0;
+      newShuffledDeck = shuffleDeck(makeDeck());
+      betBtn.style.pointerEvents = 'all';
+    }, 1000);
+  }
+};
 /** @event listener events */
 dealBtn.addEventListener('click', clickDeal);
 betBtn.addEventListener('click', clickBet);
