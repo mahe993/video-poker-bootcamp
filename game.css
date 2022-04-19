@@ -166,7 +166,7 @@
   transform: rotateY(180deg);
 }
 
-.selected::before {
+/* .selected::before {
   display: block;
   position: absolute;
   z-index: 1;
@@ -174,7 +174,7 @@
   left: 3.5rem;
   content: "❌";
   animation: selector 0.5s ease-out 0s 1 forwards;
-}
+} */
 
 .actionbox {
   width: 90vw;

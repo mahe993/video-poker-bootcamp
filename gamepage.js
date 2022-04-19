@@ -78,13 +78,186 @@ createStakesGrid();
 
 /** @function calcHandScore func to calculate hand scores */
 const calcHandScore = () => {
-
+  const finalHand = [...document.querySelectorAll('.card')];
+  finalHand.forEach((x) => {
+    finalHandRanks.push(Number(x.dataset.rank));
+    finalHandSuits.push(x.dataset.suit);
+  });
+  console.log(finalHandRanks);
+  console.log(finalHandSuits);
+  /** for suitCounter */
+  for (let i = 0; i < finalHandSuits.length; i += 1) {
+    if (finalHandSuits[i] === finalHandSuits[i + 1]) {
+      if (i + 1 === finalHandSuits.length - 1) {
+        suitCounter = 1;
+      } else { continue; }
+    } else { break; }
+  }
+  /** for rankDifference */
+  highestHandRank = Math.max(...finalHandRanks);
+  lowestHandRank = Math.min(...finalHandRanks);
+  rankDifference = highestHandRank - lowestHandRank;
+  if (rankDifference === 12) {
+    rankDifference = 14 - lowestHandRank;
+  }
+  /** for rankFrequency */
+  for (let i = 0; i < finalHandRanks.length; i += 1) {
+    for (let j = 0; j < finalHandRanks.length; j += 1) {
+      if (finalHandRanks[i] === finalHandRanks[j]) {
+        rankFrequency[i] += 1;
+      }
+    }
+  }
 };
 
-/** @function cardProto ancenstor prototype obj for makeCardObj. cards will have proto func to create a div element of themselves */
+/** @function royalFlush royal flush win. returns true if conditions met */
+const royalFlush = () => {
+  if (suitCounter === 1 && rankDifference === 4 && lowestHandRank === 1 && highestHandRank === 13) {
+    return true;
+  } return false;
+};
+
+/** @function straightFlush straight flush win. returns true if conditions met */
+const straightFlush = () => {
+  if (suitCounter === 1 && rankDifference === 4) {
+    return true;
+  } return false;
+};
+
+/** @function fourKind four of a kind win. returns true if conditions met */
+const fourKind = () => {
+  if (rankFrequency.includes(4)) {
+    return true;
+  } return false;
+};
+
+/** @function fullHouse full house win. returns true if conditions met */
+const fullHouse = () => {
+  if (rankFrequency.includes(3) && rankFrequency.includes(2)) {
+    return true;
+  } return false;
+};
+
+/** @function flush flush win. returns true if conditions met */
+const flush = () => {
+  if (suitCounter === 1) {
+    return true;
+  } return false;
+};
+
+/** @function straight straight win. returns true if conditions met */
+const straight = () => {
+  if (rankDifference === 4 && Math.max(...rankFrequency) === 1) {
+    return true;
+  } return false;
+};
+
+/** @function threeKind three of a kind win. returns true if conditions met */
+const threeKind = () => {
+  if (rankFrequency.includes(3)) {
+    return true;
+  } return false;
+};
+
+/** @function twoPairs two pairs win. returns true if conditions met */
+const twoPairs = () => {
+  let counter = 0;
+  rankFrequency.forEach((x) => { if (x === 2) { counter += 1; } });
+  if (counter === 4) {
+    return true;
+  } return false;
+};
+
+/** @function jacksOrBetter jacks pair or better win. returns true if conditions met */
+const jacksOrBetter = () => {
+  if (rankFrequency.includes(2)) {
+    for (let i = 0; i < rankFrequency.length; i += 1) {
+      if (rankFrequency[i] === 2) {
+        if (finalHandRanks[i] === 1 || finalHandRanks[i] > 10) {
+          return true;
+        }
+      }
+    }
+  } return false;
+};
+
+/** @function winningEvents compile all win scenarios */
+const winningEvents = () => {
+  switch (true) {
+    case royalFlush():
+      userInfo[0].bankBalance += betAmount * 250;
+      gameMessage.innerText = '?%QWR!@#$@! ROYAL FLUSH!!!! CONGRATS!!';
+      handScore = 9;
+      break;
+
+    case straightFlush():
+      userInfo[0].bankBalance += betAmount * 50;
+      gameMessage.innerText = 'WOWOWOW STRAIGHT FLUSH!! PARTAYY!!';
+      handScore = 8;
+      break;
+
+    case fourKind():
+      userInfo[0].bankBalance += betAmount * 25;
+      gameMessage.innerText = 'Four of a kind!! $_$_$_$!!';
+      handScore = 7;
+      break;
+
+    case fullHouse():
+      userInfo[0].bankBalance += betAmount * 9;
+      gameMessage.innerText = 'FOOOLL HOOOOUSE!! Take it and run!!';
+      handScore = 6;
+      break;
+
+    case flush():
+      userInfo[0].bankBalance += betAmount * 6;
+      gameMessage.innerText = 'Flush!! remember to wash your hands too!!';
+      handScore = 5;
+      break;
+
+    case straight():
+      userInfo[0].bankBalance += betAmount * 4;
+      gameMessage.innerText = 'Straight!! gettin lucky!!';
+      handScore = 4;
+      break;
+
+    case threeKind():
+      userInfo[0].bankBalance += betAmount * 3;
+      gameMessage.innerText = 'Trips!! Say no to drugs kids';
+      handScore = 3;
+      break;
+
+    case twoPairs():
+      userInfo[0].bankBalance += betAmount * 2;
+      gameMessage.innerText = 'Two Dubs!! woopwooop!!';
+      handScore = 2;
+      break;
+
+    case jacksOrBetter():
+      userInfo[0].bankBalance += betAmount * 1;
+      gameMessage.innerText = 'Jacks Pair or better! hope breaking even is your thing!';
+      handScore = 1;
+      break;
+
+    default:
+      /** change game message for losing */
+      gameMessage.innerText = 'Sorry you lost! adjust bet size and deal again!';
+  }
+};
+
+/** @function animateStakesBoard highlighting winning row and box */
+const animateStakesBoard = () => {
+  playerAccountDisplay.innerText = `$${userInfo[0].bankBalance}`;
+  if (handScore !== 0) {
+    document.querySelector(`.row${handScore}`).classList.add('selectrow');
+    document.querySelector(`.box${handScore}${betAmount}`).classList.add('winner'); }
+};
+
+/** @function cardProto prototype obj for makeCardObj. proto method to create a div element */
 const cardProto = {
   createDiv() {
     const cardDiv = document.createElement('div');
+    cardDiv.setAttribute('data-rank', `${this.cardRank}`);
+    cardDiv.setAttribute('data-suit', `${this.cardSuit}`);
     cardDiv.classList.add('card', `${this.cardColor}`);
     const cardBackDiv = document.createElement('img');
     cardBackDiv.src = './images/cardback.png';
@@ -154,12 +327,22 @@ const clickCard = (event) => {
   let cardClassesArray = [...event.currentTarget.classList];
   if (cardClassesArray.includes('selected')) {
     event.currentTarget.classList.remove('selected');
+    event.currentTarget.classList.add('unflip');
+    event.currentTarget.classList.remove('flip');
   } else {
-    event.currentTarget.classList.add('selected'); }
+    event.currentTarget.classList.add('selected');
+    event.currentTarget.classList.add('flip');
+    event.currentTarget.classList.remove('unflip');
+  }
 };
 
 /** @function clickBet func for clicking on pokerchip event listener */
 const clickBet = () => {
+  /** remove stakes board winning animations */
+  document.querySelector(`.row${handScore}`).classList.remove('selectrow');
+  document.querySelector(`.box${handScore}${betAmount}`).classList.remove('winner');
+  handScore = 0;
+
   betAmount += 1;
   if (betAmount > 5) {
     betAmount = 1;
@@ -176,19 +359,24 @@ const clickBet = () => {
 /** @function clickDeal func for clicking on deal button event listener */
 const clickDeal = () => {
   if (gameState === 0) {
+    /** remove stakes board winning animations and game message */
+    document.querySelector(`.row${handScore}`).classList.remove('selectrow');
+    document.querySelector(`.box${handScore}${betAmount}`).classList.remove('winner');
+    gameMessage.innerText = 'Dealing...';
+    handScore = 0;
     /** remove existing cards */
     const allCardsArray = [...document.querySelectorAll('.card')];
     allCardsArray.forEach((x) => {
       x.classList.add('removing');
       setTimeout(() => x.remove(), 1000); });
-    /** take the bet money */
-    accountBalance -= betAmount;
-    if (accountBalance < 0) {
-      accountBalance += betAmount;
+    /** take the bet money. to check for username if planning to allow for username switching */
+    userInfo[0].bankBalance -= betAmount;
+    if (userInfo[0].bankBalance < 0) {
+      userInfo[0].bankBalance += betAmount;
       alert('You do not have enough funds to make this bet! Please change bet amount to continue playing!');
       return;
     }
-    playerAccountDisplay.innerText = accountBalance;
+    playerAccountDisplay.innerText = `$${userInfo[0].bankBalance}`;
     /** disable changing of bet amount */
     betBtn.style.pointerEvents = 'none';
     /** create new 5 cards */
@@ -207,13 +395,21 @@ const clickDeal = () => {
     );
     /** enable clicking on cards */
     cardContainer.style.pointerEvents = 'all';
-    /** change game message */
-    gameMessage.innerText = 'Select cards you wish to change and click DEAL';
+    /** disable clicking on deal btn for abit */
+    dealBtn.style.pointerEvents = 'none';
     /** change game state */
     gameState = 1;
+    setTimeout(() => {
+      /** change game message */
+      gameMessage.innerText = 'Select cards you wish to change and click DEAL';
+      /** enable deal btn */
+      dealBtn.style.pointerEvents = 'all';
+    }, 1500);
   } else {
     /** disable clicking on cards */
     cardContainer.style.pointerEvents = 'none';
+    /** disable clicking on deal btn */
+    dealBtn.style.pointerEvents = 'none';
     /** to record card# that has been removed so to facilitate replacing later on */
     const removedCardArray = [];
     /** @method forEach array method to identify which cards are selected to remove */
@@ -240,17 +436,29 @@ const clickDeal = () => {
         cardDisplay.classList.add('dealing');
         cardDisplay.addEventListener('click', clickCard);
       }
-      /** Check win status and award bets */
+      setTimeout(() => {
+        /** Check win status and award bets */
+        calcHandScore();
+        winningEvents();
+        animateStakesBoard();
 
-      /** change game message */
-      gameMessage.innerText = 'Sorry you lost! adjust bet size and deal again!';
-      /** reset game state */
-      gameState = 0;
-      newShuffledDeck = shuffleDeck(makeDeck());
-      betBtn.style.pointerEvents = 'all';
+        /** reset game states */
+        newShuffledDeck = shuffleDeck(makeDeck());
+        betBtn.style.pointerEvents = 'all';
+        gameState = 0;
+        suitCounter = 0;
+        rankDifference = 0;
+        rankFrequency = [0, 0, 0, 0, 0];
+        highestHandRank = 0;
+        lowestHandRank = 0;
+        finalHandRanks = [];
+        finalHandSuits = [];
+        dealBtn.style.pointerEvents = 'all';
+      }, 2000);
     }, 1000);
   }
 };
+
 /** @event listener events */
 dealBtn.addEventListener('click', clickDeal);
 betBtn.addEventListener('click', clickBet);
