@@ -25,8 +25,11 @@ const clickPlay = () => {
   gameMessage.innerText = `Welcome ${userInfoObject.username}, Click the DEAL button to start!`;
   playerNameDisplay.innerText = inputUsername.value;
   playerAccountDisplay.innerText = `$${inputBalance.value}`;
+
   audioWhiteNoise.play();
   audioEntryNoise.play();
+  audioWhiteNoise.volume = 0.4;
+  audioEntryNoise.volume = 0.4;
 };
 
 /** @event click event for Play button */

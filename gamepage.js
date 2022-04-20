@@ -97,8 +97,11 @@ const calcHandScore = () => {
   highestHandRank = Math.max(...finalHandRanks);
   lowestHandRank = Math.min(...finalHandRanks);
   rankDifference = highestHandRank - lowestHandRank;
+  /** to capture the event of 10 - Ace straight */
   if (rankDifference === 12) {
-    rankDifference = 14 - lowestHandRank;
+    let sortedHandRanks = [...finalHandRanks].sort((a, b) => a - b);
+    console.log(sortedHandRanks);
+    rankDifference = 14 - sortedHandRanks[1];
   }
   /** for rankFrequency */
   for (let i = 0; i < finalHandRanks.length; i += 1) {
@@ -324,6 +327,8 @@ let newShuffledDeck = shuffleDeck(makeDeck());
 
 /** @function clickCard func for clicking on cards event listener */
 const clickCard = (event) => {
+  dealCardSfx.currentTime = 0;
+  dealCardSfx.play();
   let cardClassesArray = [...event.currentTarget.classList];
   if (cardClassesArray.includes('selected')) {
     event.currentTarget.classList.remove('selected');
@@ -343,17 +348,45 @@ const clickBet = () => {
   document.querySelector(`.box${handScore}${betAmount}`).classList.remove('winner');
   handScore = 0;
 
+  /** betting mechanics */
   betAmount += 1;
   if (betAmount > 5) {
     betAmount = 1;
   }
-  if (betAmount === 1) {
-    document.querySelector('.column5').classList.remove('selectcolumn');
+  betDisplay.innerText = betAmount;
+
+  /** click bet sfx */
+  switch (betAmount) {
+    case 1:
+      oneChipSfx.currentTime = 0.1;
+      oneChipSfx.play();
+      document.querySelector('.column5').classList.remove('selectcolumn');
+      break;
+
+    case 2:
+      oneChipSfx.currentTime = 0.1;
+      oneChipSfx.play();
+      break;
+
+    case 3:
+      threeChipSfx.currentTime = 0;
+      threeChipSfx.play();
+      break;
+
+    case 4:
+      threeChipSfx.currentTime = 0;
+      threeChipSfx.play();
+      break;
+
+    case 5:
+      fiveChipSfx.currentTime = 0;
+      fiveChipSfx.play();
+      break;
   }
+
+  /** click bet vfx */
   document.querySelector(`.column${betAmount - 1}`).classList.remove('selectcolumn');
   document.querySelector(`.column${betAmount}`).classList.add('selectcolumn');
-
-  betDisplay.innerText = betAmount;
 };
 
 /** @function clickDeal func for clicking on deal button event listener */
@@ -363,6 +396,15 @@ const clickDeal = () => {
     document.querySelector(`.row${handScore}`).classList.remove('selectrow');
     document.querySelector(`.box${handScore}${betAmount}`).classList.remove('winner');
     gameMessage.innerText = 'Dealing...';
+    /** reset game states */
+    newShuffledDeck = shuffleDeck(makeDeck());
+    suitCounter = 0;
+    rankDifference = 0;
+    rankFrequency = [0, 0, 0, 0, 0];
+    highestHandRank = 0;
+    lowestHandRank = 0;
+    finalHandRanks = [];
+    finalHandSuits = [];
     handScore = 0;
     /** remove existing cards */
     const allCardsArray = [...document.querySelectorAll('.card')];
@@ -391,6 +433,8 @@ const clickDeal = () => {
       (x) => {
         x.classList.add('dealing');
         x.addEventListener('click', clickCard);
+        dealCardSfx.currentTime = 0;
+        dealCardSfx.play();
       },
     );
     /** enable clicking on cards */
@@ -419,6 +463,8 @@ const clickDeal = () => {
         if ([...x.classList].includes('selected')) {
           removedCardArray.push([...x.classList][2]);
           x.classList.add('removing');
+          dealCardSfx.currentTime = 0;
+          dealCardSfx.play();
           setTimeout(() => {
             x.remove();
           }, 1000);
@@ -435,6 +481,8 @@ const clickDeal = () => {
         cardContainer.append(cardDisplay);
         cardDisplay.classList.add('dealing');
         cardDisplay.addEventListener('click', clickCard);
+        dealCardSfx.currentTime = 0;
+        dealCardSfx.play();
       }
       setTimeout(() => {
         /** Check win status and award bets */
@@ -442,18 +490,12 @@ const clickDeal = () => {
         winningEvents();
         animateStakesBoard();
 
-        /** reset game states */
-        newShuffledDeck = shuffleDeck(makeDeck());
-        betBtn.style.pointerEvents = 'all';
-        gameState = 0;
-        suitCounter = 0;
-        rankDifference = 0;
-        rankFrequency = [0, 0, 0, 0, 0];
-        highestHandRank = 0;
-        lowestHandRank = 0;
-        finalHandRanks = [];
-        finalHandSuits = [];
+        /** enable buttons */
         dealBtn.style.pointerEvents = 'all';
+        betBtn.style.pointerEvents = 'all';
+
+        /** change game state */
+        gameState = 0;
       }, 2000);
     }, 1000);
   }

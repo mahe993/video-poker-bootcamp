@@ -20,6 +20,10 @@ const betBtn = document.querySelector('.pokerchip');
 const betDisplay = document.querySelector('.betnumber');
 const cardContainer = document.querySelector('.cardcontainer');
 const root = document.documentElement;
+const oneChipSfx = document.querySelector('.onechipsfx');
+const threeChipSfx = document.querySelector('.threechipsfx');
+const fiveChipSfx = document.querySelector('.fivechipsfx');
+const dealCardSfx = document.querySelector('.dealcardsfx');
 
 /** @global gameplay related */
 const STAKES_ROWS = 10;
