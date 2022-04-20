@@ -11,8 +11,6 @@ const registrationPage = document.querySelector('.registrationpage');
 const playerNameDisplay = document.querySelector('.playername');
 const playerAccountDisplay = document.querySelector('.playeraccount');
 const gamePage = document.querySelector('.gamepage');
-const audioWhiteNoise = document.querySelector('.whitenoise');
-const audioEntryNoise = document.querySelector('.entrynoise');
 const gameMessage = document.querySelector('.gamemessage');
 const gameInfoBox = document.querySelector('.gameinfobox');
 const dealBtn = document.querySelector('.dealbutton');
@@ -20,10 +18,18 @@ const betBtn = document.querySelector('.pokerchip');
 const betDisplay = document.querySelector('.betnumber');
 const cardContainer = document.querySelector('.cardcontainer');
 const root = document.documentElement;
+
+/** @global audio */
+const audioEntryNoise = document.querySelector('.entrynoise');
+const audioWhiteNoise = document.querySelector('.whitenoise');
 const oneChipSfx = document.querySelector('.onechipsfx');
 const threeChipSfx = document.querySelector('.threechipsfx');
 const fiveChipSfx = document.querySelector('.fivechipsfx');
 const dealCardSfx = document.querySelector('.dealcardsfx');
+const winSfxOne = document.querySelector('.winsfx');
+const winSfxTwo = document.querySelector('.winsfx2');
+const winSfxThree = document.querySelector('.winsfx3');
+const winAudioArray = [winSfxOne, winSfxTwo, winSfxThree];
 
 /** @global gameplay related */
 const STAKES_ROWS = 10;
