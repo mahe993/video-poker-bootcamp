@@ -252,9 +252,10 @@ const animateStakesBoard = () => {
   playerAccountDisplay.innerText = `$${userInfo[0].bankBalance}`;
   if (handScore !== 0) {
     document.querySelector(`.row${handScore}`).classList.add('selectrow');
-    document.querySelector(`.box${handScore}${betAmount}`).classList.add('winner'); }
-  const randomWinAudio = winAudioArray[Math.floor(Math.random() * 3)];
-  randomWinAudio.play();
+    document.querySelector(`.box${handScore}${betAmount}`).classList.add('winner');
+    const randomWinAudio = winAudioArray[Math.floor(Math.random() * 3)];
+    randomWinAudio.play();
+  }
 };
 
 /** @function cardProto prototype obj for makeCardObj. proto method to create a div element */
