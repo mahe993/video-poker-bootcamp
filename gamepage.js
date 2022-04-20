@@ -244,6 +244,9 @@ const winningEvents = () => {
     default:
       /** change game message for losing */
       gameMessage.innerText = 'Sorry you lost! adjust bet size and deal again!';
+      const randomFailAudio = failAudioArray[Math.floor(Math.random() * 3)];
+      randomFailAudio.currentTime = 0;
+      randomFailAudio.play();
   }
 };
 
@@ -254,6 +257,7 @@ const animateStakesBoard = () => {
     document.querySelector(`.row${handScore}`).classList.add('selectrow');
     document.querySelector(`.box${handScore}${betAmount}`).classList.add('winner');
     const randomWinAudio = winAudioArray[Math.floor(Math.random() * 3)];
+    randomWinAudio.currentTime = 0;
     randomWinAudio.play();
   }
 };

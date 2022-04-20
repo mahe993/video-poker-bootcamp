@@ -30,6 +30,10 @@ const winSfxOne = document.querySelector('.winsfx');
 const winSfxTwo = document.querySelector('.winsfx2');
 const winSfxThree = document.querySelector('.winsfx3');
 const winAudioArray = [winSfxOne, winSfxTwo, winSfxThree];
+const failSfxOne = document.querySelector('.failsfx');
+const failSfxTwo = document.querySelector('.failsfx2');
+const failSfxThree = document.querySelector('.failsfx3');
+const failAudioArray = [failSfxOne, failSfxTwo, failSfxThree];
 
 /** @global gameplay related */
 const STAKES_ROWS = 10;
